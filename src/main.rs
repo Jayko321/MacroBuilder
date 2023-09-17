@@ -2,10 +2,11 @@ mod config;
 mod consts;
 mod executor;
 
+use crate::executor::Executor;
 use config::*;
 use consts::*;
 use std::{env, process};
-use crate::executor::Executor;
+use std::process::exit;
 
 #[allow(non_snake_case)]
 fn main() {
@@ -15,6 +16,7 @@ fn main() {
         args.push(i);
     }
     dbg!(&args);
+
     if args.len() < 4 {
         eprintln!("{}", NOT_ENOUGH_ARGUMENTS);
         process::exit(1);

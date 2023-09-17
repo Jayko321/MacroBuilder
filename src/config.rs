@@ -15,7 +15,7 @@ pub struct Config<'a> {
 }
 
 impl Config<'_> {
-    pub fn build<'a>(args: &'a Vec<&'a str>) -> Result<Config<'a>, &'static str> {
+    pub fn build<'a>(args: &'a Vec<&'a str>) -> Result<Config<'a>, &'a str> {
         let command = generate_command(&args[1], args);
         let mut filename: Option<&str> = None;
         if args.len() >= 4 {
@@ -31,7 +31,7 @@ impl Config<'_> {
 fn generate_command<'a>(
     command_str: &'a str,
     args: &'a Vec<&str>,
-) -> Result<Commands<'a>, &'static str> {
+) -> Result<Commands<'a>, &'a str> {
     return match command_str {
         "list" => Ok(Commands::List),
         "help" => Ok(Commands::Help),
@@ -51,21 +51,21 @@ fn generate_command<'a>(
                 "spam" => Ok(Commands::Spam(args, press_keys, bind_keys)),
                 "modify" => Ok(Commands::Modify(args)),
                 "merge" => Ok(Commands::Merge(args)),
-                &_ => {
-                    return Err("Could not parse command, please type help for list of commands:)")
-                }
+                &_ => return Err("Could not parse command, please type help for list of commands"),
             }
         }
-        &_ => return Err("Could not parse command, please type help for list of commands:)"),
+        &_ => return Err("Could not parse command, please type help for list of commands"),
     };
 }
 
-fn parse_keys<'a>(keys: &'a str) -> Result<Vec<&'a str>, &'static str> {
-    let vec_keys = keys.split("+").collect();
+fn parse_keys(keys: &str) -> Result<Vec<&str>, &str> {
+    let vec_keys: Vec<&str> = keys.split("+").collect();
     for key in &vec_keys {
-        if !KEYS.iter().any(|&s| &s == key) {
-            return Err("Unknown key, see list of keys");
-        }
+        if !KEYS
+            .iter()
+            .any(|&s| &s.to_lowercase() == &key.to_lowercase()) {
+                return Err("Unknown key, see list of keys");
+            }
     }
 
     return Ok(vec_keys);
