@@ -1,4 +1,3 @@
-use std::fmt::format;
 use crate::config::{Commands, Config};
 use crate::consts::AHK_HEADER;
 use std::fs;

@@ -1,5 +1,5 @@
+use crate::commands::common::FileCommand;
 use crate::consts::*;
-
 pub enum Commands<'a> {
     List, //Can enable or disable macros
     Help,
@@ -9,6 +9,7 @@ pub enum Commands<'a> {
     Merge(&'a Vec<&'a str>),
 }
 
+impl FileCommand for Commands<'_> {}
 pub struct Config<'a> {
     pub command: Commands<'a>,
     pub filename: Option<&'a str>,
@@ -18,9 +19,6 @@ impl Config<'_> {
     pub fn build<'a>(args: &'a Vec<&'a str>) -> Result<Config<'a>, &'a str> {
         let command = generate_command(&args[1], args);
         let mut filename: Option<&str> = None;
-        if args.len() >= 4 {
-            filename = Some(&args[4]);
-        }
         let instance = match command {
             Ok(command) => Config { command, filename },
             Err(err) => (return Err(err)),
@@ -63,9 +61,10 @@ fn parse_keys(keys: &str) -> Result<Vec<&str>, &str> {
     for key in &vec_keys {
         if !KEYS
             .iter()
-            .any(|&s| &s.to_lowercase() == &key.to_lowercase()) {
-                return Err("Unknown key, see list of keys");
-            }
+            .any(|&s| &s.to_lowercase() == &key.to_lowercase())
+        {
+            return Err("Unknown key, see list of keys");
+        }
     }
 
     return Ok(vec_keys);
