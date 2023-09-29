@@ -4,7 +4,7 @@ use std::{
     io::Write,
 };
 
-pub trait FileCommand {
+pub(super) trait FileCommand {
     fn create_file(&self, filename: &str) -> Result<File, String> {
         fs::create_dir_all("./macros/").unwrap_or_else(|err| eprintln!("{}", err.to_string()));
         let mut file = match File::create(format!("./macros/{}.ahk", filename)) {

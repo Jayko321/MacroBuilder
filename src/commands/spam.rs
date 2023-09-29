@@ -1,12 +1,9 @@
-use super::common::FileCommand;
-use crate::{config::Commands, consts::AHK_HEADER};
-use std::{
-    fs::{self, File},
-    io::Write,
-};
+use std::{fs::File, io::Write};
+
+use super::{common::FileCommand, Commands};
 
 impl Commands<'_> {
-    pub fn spam_execute(&self) -> Result<bool, String> {
+    pub(super) fn spam_execute(&self) -> Result<bool, String> {
         match self {
             Self::Spam(args, press_keys, bind_keys) => {
                 let mut file: File = match self.create_file(&args[4]) {

@@ -1,27 +1,15 @@
-use crate::commands::common::FileCommand;
-use crate::consts::*;
-pub enum Commands<'a> {
-    List, //Can enable or disable macros
-    Help,
-    Spam(&'a Vec<&'a str>, Vec<&'a str>, Vec<&'a str>),
-    Replace(&'a Vec<&'a str>),
-    Modify(&'a Vec<&'a str>), // ?
-    Merge(&'a Vec<&'a str>),
-}
+use crate::{commands::Commands, consts::*};
 
-impl FileCommand for Commands<'_> {}
-pub struct Config<'a> {
+pub struct CommandBuilder<'a> {
     pub command: Commands<'a>,
-    pub filename: Option<&'a str>,
 }
 
-impl Config<'_> {
-    pub fn build<'a>(args: &'a Vec<&'a str>) -> Result<Config<'a>, &'a str> {
+impl CommandBuilder<'_> {
+    pub fn build<'a>(args: &'a Vec<&'a str>) -> Result<Commands, &'a str> {
         let command = generate_command(&args[1], args);
-        let mut filename: Option<&str> = None;
         let instance = match command {
-            Ok(command) => Config { command, filename },
-            Err(err) => (return Err(err)),
+            Ok(command) => command,
+            Err(err) => return Err(err),
         };
         return Ok(instance);
     }
