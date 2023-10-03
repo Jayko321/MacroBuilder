@@ -19,21 +19,19 @@ impl Commands<'_> {
                 };
 
                 let generated_from = String::from("; ") + &args[1..args.len()].join(" ") + "\n";
+                let ahk_bind_keys: String = String::from(bind_keys.join(" & ")) + ":: {\n";
                 file.write_all(generated_from.as_bytes()).unwrap();
-                let mut ahk_bind_keys: String = String::from("");
-                for key in bind_keys {
-                    ahk_bind_keys += format!("{} & ", key).as_str();
-                }
-                ahk_bind_keys = ahk_bind_keys[0..ahk_bind_keys.len() - 3].parse().unwrap();
-                ahk_bind_keys.push_str("::\n");
                 file.write_all(ahk_bind_keys.as_bytes()).unwrap();
 
-                let mut ahk_press_keys: String = "".into();
-                ahk_press_keys += "{\nSendInput \"";
-                for key in press_keys {
-                    ahk_press_keys += key;
-                }
-                ahk_press_keys.push_str("\"\nSetKeyDelay 25, 25 \n} \nReturn");
+                let mut ahk_key_states: Vec<String> = vec![];
+                bind_keys 
+                    .iter()
+                    .for_each(|&s| ahk_key_states.push(format!("GetKeyState(\"{}\", \"P\")", s)));
+                let ahk_press_keys: String = String::from("\tWhile ")
+                    + ahk_key_states.join(" & ").as_str()
+                    + " {\n\t\tSend \""
+                    + &press_keys.concat()
+                    + "\"\n\t\tSleep 25 \n\t}\n} \n";
                 file.write_all(ahk_press_keys.as_bytes()).unwrap();
 
                 return Ok(true);

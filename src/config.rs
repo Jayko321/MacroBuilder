@@ -18,7 +18,10 @@ impl CommandBuilder<'_> {
         return Ok(instance);
     }
 }
-fn generate_command<'a>(command_str: &'a str, args: &'a Vec<&str>) -> Result<Commands<'a>, &'a str> {
+fn generate_command<'a>(
+    command_str: &'a str,
+    args: &'a Vec<&str>,
+) -> Result<Commands<'a>, &'a str> {
     return match command_str {
         "list" => Ok(Commands::List),
         "help" => Ok(Commands::Help),
