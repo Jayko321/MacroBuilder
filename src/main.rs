@@ -18,11 +18,10 @@ fn main() {
         eprintln!("Problem parsing arguments: {err}");
         process::exit(1);
     });
-    command.execute();
-
-    //    let executor = Executor::build(&config);
-    //    executor.execute().unwrap_or_else(|err| {
-    //        eprintln!("Problem parsing arguments: {err}");
-    //        process::exit(1);
-    //    });
+    match command.execute() {
+        Ok(_) => {}
+        Err(err) => {
+            eprintln!("Problem accured while executing command: \n {}", err)
+        }
+    };
 }

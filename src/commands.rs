@@ -15,7 +15,18 @@ pub enum Commands<'a> {
     Merge(&'a Vec<&'a str>),
 }
 
-impl FileCommand for Commands<'_> {}
+impl FileCommand for Commands<'_> {
+    fn is_enough_args(&self) -> bool {
+        match self {
+            Commands::Help => return true,
+            Commands::Spam(args, _, _) => return args.len() > 4,
+            Commands::Replace(args) => return args.len() > 4,
+            Commands::Modify(args) => return args.len() > 4,
+            Commands::Merge(args) => return args.len() > 4,
+            Commands::List => return true,
+        }
+    }
+}
 
 impl Commands<'_> {
     pub fn execute(&self) -> Result<bool, String> {

@@ -6,6 +6,10 @@ pub struct CommandBuilder<'a> {
 
 impl CommandBuilder<'_> {
     pub fn build<'a>(args: &'a Vec<&'a str>) -> Result<Commands, &'a str> {
+        if args.len() <= 1 {
+            return Err(NOT_ENOUGH_ARGUMENTS);
+        }
+
         let command = generate_command(&args[1], args);
         let instance = match command {
             Ok(command) => command,
@@ -14,10 +18,7 @@ impl CommandBuilder<'_> {
         return Ok(instance);
     }
 }
-fn generate_command<'a>(
-    command_str: &'a str,
-    args: &'a Vec<&str>,
-) -> Result<Commands<'a>, &'a str> {
+fn generate_command<'a>(command_str: &'a str, args: &'a Vec<&str>) -> Result<Commands<'a>, &'a str> {
     return match command_str {
         "list" => Ok(Commands::List),
         "help" => Ok(Commands::Help),
