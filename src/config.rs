@@ -1,4 +1,7 @@
-use crate::{commands::Commands::{self}, consts::*};
+use crate::{
+    commands::Commands::{self},
+    consts::*,
+};
 
 pub struct CommandBuilder<'a> {
     pub command: Commands<'a>,

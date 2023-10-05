@@ -1,4 +1,4 @@
-pub struct Help {  }
+pub struct Help {}
 
 impl Help {
     pub(super) fn execute(&self) -> Result<bool, String> {

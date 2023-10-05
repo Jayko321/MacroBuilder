@@ -1,9 +1,8 @@
-; spam f+a l+b name
-~$l::
-~$b::
+; spam space space name
+~$space::
 {
-	While GetKeyState("l", "P") & GetKeyState("b", "P") {
-		Send "fa"
+	While GetKeyState("space", "P") {
+		Send "{space}"
 		Sleep 25 
 	}
 } 

@@ -1,4 +1,4 @@
-use self::{spam::Spam, help::Help};
+use self::{help::Help, spam::Spam};
 
 pub mod common;
 pub mod help;

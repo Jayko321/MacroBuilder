@@ -1,5 +1,7 @@
 pub const NOT_ENOUGH_ARGUMENTS: &str = "Not enough arguments, type help for help:)";
 
+pub const ADDITIONAL_ARGUMENTS: &'static [&'static str] = &["delay", "target"];
+
 pub const KEYS: &'static [&'static str] = &[
     "esc",
     "f1",
