@@ -1,4 +1,4 @@
-use self::common::FileCommand;
+use self::{spam::Spam, help::Help};
 
 pub mod common;
 pub mod help;
@@ -8,24 +8,11 @@ pub mod spam;
 
 pub enum Commands<'a> {
     List, //Can enable or disable macros
-    Help,
-    Spam(&'a Vec<&'a str>, Vec<&'a str>, Vec<&'a str>),
+    Help(Help),
+    Spam(Spam),
     Replace(&'a Vec<&'a str>),
     Modify(&'a Vec<&'a str>), // ?
     Merge(&'a Vec<&'a str>),
-}
-
-impl FileCommand for Commands<'_> {
-    fn is_enough_args(&self) -> bool {
-        match self {
-            Commands::Help => return true,
-            Commands::Spam(args, _, _) => return args.len() > 4,
-            Commands::Replace(args) => return args.len() > 4,
-            Commands::Modify(args) => return args.len() > 4,
-            Commands::Merge(args) => return args.len() > 4,
-            Commands::List => return true,
-        }
-    }
 }
 
 impl Commands<'_> {
@@ -34,11 +21,11 @@ impl Commands<'_> {
             Commands::List => {
                 return Ok(true);
             }
-            Commands::Help => {
-                return self.help_execute();
+            Commands::Help(help) => {
+                return help.execute();
             }
-            Commands::Spam(_, _, _) => {
-                return self.spam_execute();
+            Commands::Spam(spam) => {
+                return spam.execute();
             }
             Commands::Replace(_) => {
                 return Ok(true);

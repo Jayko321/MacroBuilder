@@ -1,5 +1,5 @@
-mod commands;
 #[allow(non_snake_case)]
+mod commands;
 mod config;
 mod consts;
 
@@ -14,7 +14,7 @@ fn main() {
     }
     dbg!(&args);
 
-    let command = CommandBuilder::build(&args).unwrap_or_else(|err| {
+    let command = CommandBuilder::build(&temp_args).unwrap_or_else(|err| {
         eprintln!("Problem parsing arguments: {err}");
         process::exit(1);
     });

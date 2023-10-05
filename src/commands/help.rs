@@ -1,7 +1,7 @@
-use super::Commands;
+pub struct Help {  }
 
-impl Commands<'_> {
-    pub(super) fn help_execute(&self) -> Result<bool, String> {
+impl Help {
+    pub(super) fn execute(&self) -> Result<bool, String> {
         println!("
         Full list of commands: \n
         List \t - \t Lists all macros created with MacroBuilder, also allows enabling and disabling them \n
