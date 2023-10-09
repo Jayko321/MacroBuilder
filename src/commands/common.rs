@@ -1,4 +1,7 @@
-use std::{fs::{self, File}, collections::HashMap};
+use std::{
+    collections::HashMap,
+    fs::{self, File},
+};
 
 pub(super) trait FileCommand {
     fn create_file(&self, filename: &str) -> Result<File, String> {
@@ -14,13 +17,19 @@ pub(super) trait FileCommand {
 }
 
 pub(super) trait AdditionalArgs {
-    //Should be supplied with only additional args, any arg that doesnt start with -- will result in an error
-    fn parse_additional_args(&self, args: &Vec<String>) -> Result<HashMap<String, String>, String> {
-        let additional_args = HashMap::new();
-        if args.iter().any(|s| &s[0..1] == "--") {
-            return Err("Too much arguments or additional argument didnt start with --".into())
-        }
+    //Should be supplied with only additional args, any arg that doesnt start with -- wont be parsed
+    fn parse_additional_args<'a>(&'a self, args: &'a Vec<String>) -> HashMap<&'a str, String> {
+        let mut additional_args: HashMap<&str, String> = HashMap::new();
+        args.into_iter().for_each(|s| {
+            if &s[0..2] != "--" {
+                return;
+            }
+            let pos = s.as_str().find("=");
+            if pos != None {
+                additional_args.insert(&s[2..pos.unwrap()], s[pos.unwrap() + 1..s.len()].into());
+            }
+        });
 
-        return Ok(additional_args);
-    } 
+        return additional_args;
+    }
 }

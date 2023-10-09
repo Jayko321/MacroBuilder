@@ -2,13 +2,14 @@ use std::{fs::File, io::Write};
 
 use crate::consts::NOT_ENOUGH_ARGUMENTS;
 
-use super::common::FileCommand;
+use super::common::{AdditionalArgs, FileCommand};
 pub struct Spam {
     pub args: Vec<String>,
     pub press_keys: Vec<String>,
     pub bind_keys: Vec<String>,
 }
 impl FileCommand for Spam {}
+impl AdditionalArgs for Spam {}
 
 impl Spam {
     pub(super) fn execute(&self) -> Result<bool, String> {
@@ -19,6 +20,7 @@ impl Spam {
             Ok(file_) => file_,
             Err(err) => return Err(err),
         };
+        let add_args = self.parse_additional_args(&self.args);
 
         let generated_from = String::from("; ") + &self.args[1..self.args.len()].join(" ") + "\n";
         let mut ahk_bind_keys: Vec<String> = vec![];
@@ -41,7 +43,9 @@ impl Spam {
             + ahk_key_states.join(" & ").as_str()
             + " {\n\t\tSend \""
             + &ahk_press_keys.concat()
-            + "\"\n\t\tSleep 25 \n\t}\n} \n";
+            + "\"\n\t\tSleep "
+            + add_args["delay"].as_str()
+            + " \n\t}\n} \n";
         file.write_all(ahk_press_keys.as_bytes()).unwrap();
 
         return Ok(true);
