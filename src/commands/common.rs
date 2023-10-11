@@ -21,6 +21,7 @@ pub(super) trait AdditionalArgs {
     fn parse_additional_args<'a>(&'a self, args: &'a Vec<String>) -> HashMap<&'a str, String> {
         let mut additional_args: HashMap<&str, String> = HashMap::new();
         args.into_iter().for_each(|s| {
+            if s.len() < 3 { return; }
             if &s[0..2] != "--" {
                 return;
             }

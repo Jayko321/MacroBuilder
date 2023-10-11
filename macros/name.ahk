@@ -1,8 +1,8 @@
-; spam space space name --delay=225
-~$space::
+; spam f f name --delay=10 --target=Notepad
+~$f::
 {
-	While GetKeyState("space", "P") {
-		Send "{space}"
-		Sleep 225 
+	While GetKeyState("f", "P") & WinActive("ahk_class Notepad") {
+		Send "{f}"
+		Sleep 10 
 	}
 } 

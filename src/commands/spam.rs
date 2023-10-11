@@ -23,6 +23,7 @@ impl Spam {
         let add_args = self.parse_additional_args(&self.args);
 
         let generated_from = String::from("; ") + &self.args[1..self.args.len()].join(" ") + "\n";
+
         let mut ahk_bind_keys: Vec<String> = vec![];
         self.bind_keys
             .iter()
@@ -36,15 +37,24 @@ impl Spam {
             .iter()
             .for_each(|s| ahk_key_states.push(format!("GetKeyState(\"{}\", \"P\")", s)));
         let mut ahk_press_keys: Vec<String> = vec![];
+        let mut target: String = "".into();
+            match add_args.get(&"target") {
+                Some(t) => { target = " & WinActive(\"ahk_class ".to_owned() + t + "\")"},
+                None => target = "".into(),
+            };
         self.press_keys
             .iter()
             .for_each(|s| ahk_press_keys.push(String::from("{") + s + "}"));
         let ahk_press_keys: String = String::from("\tWhile ")
             + ahk_key_states.join(" & ").as_str()
+            + target.as_str()
             + " {\n\t\tSend \""
             + &ahk_press_keys.concat()
             + "\"\n\t\tSleep "
-            + add_args["delay"].as_str()
+            + match add_args.get(&"delay") {
+                Some(delay) => delay,
+                None => "25",
+            }
             + " \n\t}\n} \n";
         file.write_all(ahk_press_keys.as_bytes()).unwrap();
 
